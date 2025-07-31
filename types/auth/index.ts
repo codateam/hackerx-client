@@ -35,3 +35,13 @@ export interface ResponseType<T> {
   data: T;
   success?: boolean;
 }
+
+export interface Organization {
+  id: string;
+  name: string;
+}
+
+export interface OrganizationsResponse {
+  count: number;
+  organizations: Organization[];
+}

@@ -2,7 +2,7 @@ import api from "@/configs/api-config";
 import { cookiesStorage } from "@/lib/storage";
 import { setUser } from "@/store/auth/auth.slice";
 import { store } from "@/store/store";
-import { ResponseType } from "@/types/auth";
+import { OrganizationsResponse, ResponseType } from "@/types/auth";
 
 import {
   AddAdminValidationSchema,
@@ -125,17 +125,34 @@ export const handleLogin = async (
 };
 
 export const handleAddUser = async (
-  data: z.infer<typeof AddAdminValidationSchema>
+  data: z.infer<typeof AddAdminValidationSchema>,
+  isOrganizationAdmin: boolean = false
 ): Promise<ResponseType<any>> => {
   try {
-    const endpoint =
-      data.role === "admin" ? apiRoutes.ADD_ADMIN : apiRoutes.ADD_LECTURER;
+    let endpoint: string;
 
-    const response = await api.post(endpoint, {
+    if (data.role === "admin") {
+      // Use organization admin endpoint if called by org admin
+      endpoint = isOrganizationAdmin
+        ? apiRoutes.ADD_ORG_ADMIN
+        : apiRoutes.ADD_ADMIN;
+    } else {
+      // For lecturers, use the regular lecturer endpoint
+      endpoint = apiRoutes.ADD_LECTURER;
+    }
+
+    const requestData: any = {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
-    });
+    };
+
+    // Add organizationId if it exists in the data
+    if (data.organizationId) {
+      requestData.organizationId = data.organizationId;
+    }
+
+    const response = await api.post(endpoint, requestData);
 
     return {
       success: true,
@@ -153,6 +170,32 @@ export const handleAddUser = async (
       success: false,
       data: error,
       message: message ?? `An error occurred while adding ${data.role}.`,
+    };
+  }
+};
+
+export const fetchOrganizations = async (): Promise<
+  ResponseType<OrganizationsResponse>
+> => {
+  try {
+    const response = await api.get(apiRoutes.GET_ALL_ORGANIZATIONS);
+
+    return {
+      success: true,
+      data: response.data.data, // expects { count, organizations }
+      message: response.data.message,
+    };
+  } catch (error) {
+    let message;
+
+    if (isAxiosError(error) && error.response?.data?.message) {
+      message = error.response.data.message;
+    }
+
+    return {
+      success: false,
+      data: { count: 0, organizations: [] },
+      message: message ?? "An error occurred while fetching organizations.",
     };
   }
 };

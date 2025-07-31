@@ -104,6 +104,7 @@ const OrganizationSignup = () => {
                 id="name"
                 {...register("name")}
                 error={formState.errors.name?.message}
+                className="pt-4"
               />
               <Input
                 type="text"
@@ -111,6 +112,7 @@ const OrganizationSignup = () => {
                 id="code"
                 {...register("code")}
                 error={formState.errors.code?.message}
+                className="pt-4"
               />
               <div>
                 <label
@@ -162,6 +164,7 @@ const OrganizationSignup = () => {
                 id="description"
                 {...register("description")}
                 error={formState.errors.description?.message}
+                className="pt-4"
               />
 
               <h3 className="text-lg font-semibold">Main Admin Details</h3>
@@ -172,6 +175,7 @@ const OrganizationSignup = () => {
                 id="firstName"
                 {...register("firstName")}
                 error={formState.errors.firstName?.message}
+                className="pt-4"
               />
               <Input
                 type="text"
@@ -179,6 +183,7 @@ const OrganizationSignup = () => {
                 id="lastName"
                 {...register("lastName")}
                 error={formState.errors.lastName?.message}
+                className="pt-4"
               />
               <Input
                 label="Email"
@@ -186,6 +191,7 @@ const OrganizationSignup = () => {
                 type="email"
                 {...register("email")}
                 error={formState.errors.email?.message}
+                className="pt-4"
               />
 
               <div className="relative">
@@ -195,6 +201,7 @@ const OrganizationSignup = () => {
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
                   error={formState.errors.password?.message}
+                  className="pt-4"
                 />
                 <button
                   type="button"

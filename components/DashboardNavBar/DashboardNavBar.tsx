@@ -1,38 +1,63 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Tooltip from "antd/es/tooltip";
-import { handleAddUser } from "@/features/auth/api";
+import { fetchOrganizations, handleAddUser } from "@/features/auth/api";
 import { AddAdminValidationSchema } from "@/features/auth/lib/validation";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { Organization } from "@/types/auth";
 
 const DashboardNavBar = () => {
   const { user } = useAuth();
+  const { accountType } = useSelector((state: RootState) => state.auth);
+
   const [showForm, setShowForm] = useState(false);
   const [formType, setFormType] = useState<"admin" | "lecturer" | null>(null);
   const [tooltipVisible, setTooltipVisible] = useState(false);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     role: "",
+    organizationId: "",
   });
+
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const [loadingOrganizations, setLoadingOrganizations] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  const canAddUsers = user?.role === "admin" || accountType === "organization";
+
+  const loadOrganizations = async () => {
+    setLoadingOrganizations(true);
+    const res = await fetchOrganizations();
+
+    if (res.success && res.data) {
+      setOrganizations(res.data);
+    } else {
+      setError(res.message || "Failed to load organizations");
+    }
+
+    setLoadingOrganizations(false);
+  };
+
+  useEffect(() => {
+    if (canAddUsers) {
+      loadOrganizations();
+    }
+  }, [canAddUsers]);
 
   if (!user) {
     return <div className="p-4 w-full">Loading...</div>;
   }
 
-  const isAdmin = user.role === "admin";
-
   const handleOptionClick = (type: "admin" | "lecturer") => {
-    if (!isAdmin) {
-      setError(
-        `You don't have permission to add ${
-          type === "admin" ? "administrators" : "lecturers"
-        }`
-      );
+    if (!canAddUsers) {
+      setError(`You don't have permission to add ${type}s`);
       setTooltipVisible(false);
       return;
     }
@@ -41,6 +66,7 @@ const DashboardNavBar = () => {
     setFormData((prev) => ({
       ...prev,
       role: type,
+      organizationId: "",
     }));
     setShowForm(true);
     setTooltipVisible(false);
@@ -48,7 +74,9 @@ const DashboardNavBar = () => {
     setSuccess(null);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -60,29 +88,27 @@ const DashboardNavBar = () => {
     setIsSubmitting(true);
     setError(null);
 
-    if (!isAdmin) {
-      setError(
-        `You don't have permission to add ${
-          formType === "admin" ? "administrators" : "lecturers"
-        }`
-      );
+    if (!canAddUsers) {
+      setError(`You don't have permission to add ${formType}s`);
       setIsSubmitting(false);
       return;
     }
 
     try {
       const validatedData = AddAdminValidationSchema.parse(formData);
-      const res = await handleAddUser(validatedData);
+      const res = await handleAddUser(
+        validatedData,
+        accountType === "organization"
+      );
 
       if (res.success) {
-        setSuccess(
-          `${formType === "admin" ? "Admin" : "Lecturer"} added successfully!`
-        );
+        setSuccess(`${formType} added successfully!`);
         setFormData({
           firstName: "",
           lastName: "",
           email: "",
           role: formType || "",
+          organizationId: "",
         });
 
         setTimeout(() => {
@@ -93,11 +119,7 @@ const DashboardNavBar = () => {
         setError(res.message || "An unknown error occurred.");
       }
     } catch (error: any) {
-      if (error.errors) {
-        setError(error.errors[0]?.message || "Please check your input");
-      } else {
-        setError("An error occurred. Please try again.");
-      }
+      setError(error.errors?.[0]?.message || "Please check your input");
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -106,17 +128,17 @@ const DashboardNavBar = () => {
 
   const tooltipContent = (
     <div className="flex flex-col space-y-2 py-1">
-      {isAdmin ? (
+      {canAddUsers ? (
         <>
           <button
             onClick={() => handleOptionClick("admin")}
-            className="text-left px-4 py-2 hover:bg-gray-100 rounded transition"
+            className="text-left px-4 py-2 hover:bg-gray-100 rounded"
           >
             Add Admin
           </button>
           <button
             onClick={() => handleOptionClick("lecturer")}
-            className="text-left px-4 py-2 hover:bg-gray-100 rounded transition"
+            className="text-left px-4 py-2 hover:bg-gray-100 rounded"
           >
             Add Lecturer
           </button>
@@ -268,6 +290,35 @@ const DashboardNavBar = () => {
                   required
                 />
               </div>
+
+              {accountType === "organization" && (
+                <div className="space-y-1">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Organization
+                  </label>
+                  {loadingOrganizations ? (
+                    <div className="w-full p-2 border border-gray-300 bg-gray-50 rounded-md">
+                      Loading organizations...
+                    </div>
+                  ) : (
+                    <select
+                      name="organizationId"
+                      value={formData.organizationId}
+                      onChange={handleChange}
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      required
+                    >
+                      <option value="">Select an organization</option>
+                      {Array.isArray(organizations) &&
+                        organizations.map((org) => (
+                          <option key={org.id} value={org.id}>
+                            {org.name}
+                          </option>
+                        ))}
+                    </select>
+                  )}
+                </div>
+              )}
 
               {/* Hidden input to store the role value */}
               <input type="hidden" name="role" value={formData.role} />
