@@ -39,14 +39,12 @@ export default function Home() {
             </p>
             <div className="flex flex-col md:flex-row gap-4 md:gap-12 pt-1 md:pt-8 justify-center md:justify-end w-full">
               <Button
-                size="lg"
-                href="/sign-up"
+                href="/sign-up/signup-choice"
                 className="bg-[#0000ff] w-full md:w-[163px] h-auto hover:bg-[#0000ff]/90 text-[24px]/[29.05px] font-medium"
               >
                 Sign Up
               </Button>
               <Button
-                size="lg"
                 href="/login"
                 className="bg-[#0000ff] w-full md:w-[163px] h-auto hover:bg-[#0000ff]/90 text-[24px]/[29.05px] font-medium"
               >

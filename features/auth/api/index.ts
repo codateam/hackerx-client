@@ -49,6 +49,46 @@ export const handleSignup = async (
   }
 };
 
+export const handleOrgSignup = async (data: {
+  organization: {
+    name: string;
+    code: string;
+    type: "university" | "school" | "college" | "institute" | "academy";
+    description?: string;
+  };
+  mainAdmin: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  };
+}): Promise<ResponseType<any>> => {
+  try {
+    const response = await api.post(apiRoutes.ORG_SIGNUP, data);
+
+    // You can dispatch mainAdmin as the user if needed
+    store.dispatch(setUser(response.data.data));
+
+    return {
+      success: true,
+      data: response.data,
+      message: response.data.message,
+    };
+  } catch (error) {
+    let message;
+
+    if (isAxiosError(error) && error.response?.data?.message) {
+      message = error.response.data.message;
+    }
+
+    return {
+      success: false,
+      data: error,
+      message,
+    };
+  }
+};
+
 export const handleLogin = async (
   data: z.infer<typeof LoginValidationSchema>
 ): Promise<ResponseType<any>> => {

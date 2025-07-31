@@ -154,7 +154,7 @@ export default function Login() {
           <p className="mt-4 md:mt-6 text-center font-medium text-black text-[14px]/[16.94px] tracking-[-0.5%]">
             Don&apos;t have an account?{" "}
             <Link
-              href="/sign-up"
+              href="/sign-up/signup-choice"
               className="font-medium text-[#0000ff] hover:text-[#475edf]"
             >
               Register Now

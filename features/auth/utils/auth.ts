@@ -4,4 +4,5 @@ export const apiRoutes = {
   REFRESH_TOKEN: "/api/refreshToken",
   ADD_ADMIN: "/auth/admins/add",
   ADD_LECTURER: "/auth/lecturers/add",
+  ORG_SIGNUP: "/organizations",
 };

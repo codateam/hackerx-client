@@ -5,7 +5,7 @@ export interface RoleType {
   updatedAt: string;
 }
 
-export type UserRole = "student" | "lecturer" | "admin";
+export type UserRole = "student" | "lecturer" | "admin" | "super_admin";
 
 export interface UserType {
   id: string;
@@ -15,6 +15,7 @@ export interface UserType {
   role: UserRole;
   userToken?: string;
   matricNo?: string;
+  organizationId?: string;
 }
 
 export interface InitialAuthState {

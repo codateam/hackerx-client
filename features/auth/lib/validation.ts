@@ -42,3 +42,15 @@ export const AddAdminValidationSchema = z.object({
   email: z.string().email("Invalid email address"),
   role: z.enum(["admin", "lecturer"]),
 });
+
+export const OrganizationSignupSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  code: z.string().min(1, "Code is required"),
+  type: z.enum(["university", "school", "college", "institute", "academy"]),
+  description: z.string().optional(),
+
+  firstName: z.string().min(1, "Admin first name is required"),
+  lastName: z.string().min(1, "Admin last name is required"),
+  email: z.string().email("Invalid admin email"),
+  password: z.string().min(6, "Password too short"),
+});
