@@ -37,7 +37,9 @@ const DashboardNavBar = () => {
     const res = await fetchOrganizations();
 
     if (res.success && res.data) {
-      setOrganizations(res.data);
+      setOrganizations(
+        Array.isArray(res.data) ? res.data : res.data.organizations || []
+      );
     } else {
       setError(res.message || "Failed to load organizations");
     }
