@@ -19,17 +19,17 @@ const Logo: FC<{ className?: string }> = ({ className = "" }) => (
   <Link href="/">
     <Image
       alt="Logo"
-      src="/images/logo.png"
-      width={76}
-      height={42}
+      src="/images/chachiLogo.png"
+      width={96}
+      height={52}
       className={`md:hidden ${className}`}
       style={{ objectFit: "contain" }}
     />
     <Image
       alt="Logo"
-      src="/images/logo.png"
-      width={116}
-      height={62}
+      src="/images/chachiLogo.png"
+      width={206}
+      height={12}
       className={`hidden md:block ${className}`}
       style={{ objectFit: "contain" }}
     />
@@ -80,7 +80,10 @@ const MobileNavLink: FC<{ title: string; path: string }> = ({
   title,
   path,
 }) => (
-  <motion.div variants={mobileLinkVars} className="text-2xl uppercase text-white">
+  <motion.div
+    variants={mobileLinkVars}
+    className="text-2xl uppercase text-white"
+  >
     <Link href={path}>{title}</Link>
   </motion.div>
 );

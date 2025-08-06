@@ -32,10 +32,11 @@ export default function Home() {
               />
             </div>
             <h1 className="text-2xl md:text-6xl font-semibold text-[#0000ff] max-w-md">
-              Welcome to QuizMaster
+              Welcome to Chachi
             </h1>
-            <p className="text-lg md:text-3xl font-medium text-[#f8c35c] max-w-md">
-              Your hub for quizzes and learning
+            <p className="text-lg md:text-3xl font-medium text-[#f8c35c] max-w-lg">
+              Breaking educational barriers by making learning accessible,
+              inclusive, and empowering for all students.
             </p>
             <div className="flex flex-col md:flex-row gap-4 md:gap-12 pt-1 md:pt-8 justify-center md:justify-end w-full">
               <Button

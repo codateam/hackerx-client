@@ -23,7 +23,6 @@ export default function DashboardLayout({
       return;
     }
 
-
     if (user?.role) {
       const pathSegments = pathname.split("/");
       const currentBaseRoute = pathSegments.length > 1 ? pathSegments[1] : "";
@@ -54,7 +53,7 @@ export default function DashboardLayout({
       <div className="w-20 lg:w-64 bg-white border-r border-gray-200 p-4 flex flex-col h-screen fixed">
         <div className="flex justify-center lg:justify-start mb-10">
           <Image
-            src="/icons/Group 2.svg"
+            src="/images/chachiLogo.png"
             alt="Logo"
             width={150}
             height={50}

@@ -7,8 +7,8 @@ import { ReactQueryProvider } from "@/lib/react-query";
 import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
-  title: "QuizMaster | Home",
-  description: "An online quiz platform for students and teachers",
+  title: "Chachi",
+  description: "Education Without Limits",
 };
 
 const inter = Inter({ subsets: ["latin"] });
