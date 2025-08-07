@@ -12,7 +12,11 @@ interface CourseDetailsProps {
   onBack?: () => void;
 }
 
-export default function CourseDetailsPage({ role, courseId, onBack }: CourseDetailsProps) {
+export default function CourseDetailsPage({
+  role,
+  courseId,
+  onBack,
+}: CourseDetailsProps) {
   const {
     course,
     loading,
@@ -28,12 +32,7 @@ export default function CourseDetailsPage({ role, courseId, onBack }: CourseDeta
   }
 
   if (error) {
-    return (
-      <ErrorState
-        message={error}
-        onGoBack={() => navigateBack(onBack)}
-      />
-    );
+    return <ErrorState message={error} onGoBack={() => navigateBack(onBack)} />;
   }
 
   if (!course) {
@@ -49,6 +48,7 @@ export default function CourseDetailsPage({ role, courseId, onBack }: CourseDeta
     <div className="container mx-auto px-4 py-8">
       <CourseDetailsHeader
         role={role}
+        courseId={courseId}
         onBack={() => navigateBack(onBack)}
         onEdit={navigateToEdit}
         onDelete={handleDelete}
