@@ -25,6 +25,7 @@ import {
   useAIChatIntegration,
   useChatHistory,
 } from "@/features/ai-learning/hooks";
+import { VoiceAIControl } from "@/components/VoiceAIControl";
 
 import {
   AVAILABLE_LANGUAGES,
@@ -101,6 +102,8 @@ export default function AICoursePage() {
   const [aiExplanation, setAiExplanation] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [displayCourse, setDisplayCourse] = useState<Course | null>(null);
+  const [isVoiceAIEnabled, setIsVoiceAIEnabled] = useState(false);
+  const [isUserMuted, setIsUserMuted] = useState(false);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
@@ -374,7 +377,7 @@ export default function AICoursePage() {
             </div>
           </div>
 
-          {/* Language Selector */}
+          {/* Language Selector and Voice AI Control */}
           <div className="flex items-center space-x-3">
             <Globe size={20} className="text-gray-500" />
             <select
@@ -388,6 +391,17 @@ export default function AICoursePage() {
                 </option>
               ))}
             </select>
+            
+            {/* Voice AI Control */}
+            <VoiceAIControl
+              textToRead={aiExplanation || ""}
+              isAIExplanationEnabled={isVoiceAIEnabled}
+              onAIExplanationToggle={setIsVoiceAIEnabled}
+              isUserMuted={isUserMuted}
+              onUserMuteToggle={setIsUserMuted}
+              position="inline"
+              className="ml-2"
+            />
           </div>
         </div>
 

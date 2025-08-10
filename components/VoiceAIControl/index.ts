@@ -1,0 +1,1 @@
+export { VoiceAIControl, default, type VoiceAIControlProps } from './VoiceAIControl';
